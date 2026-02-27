@@ -4,21 +4,18 @@ from dataclasses import dataclass
 from typing import Optional, Dict, Any
 
 # =========================================================
-# NexaScope v2.1
-# - Mantiene tu diagnóstico v1.4 completo
-# - FREE (preview) + PRO (bloqueado)
-# - PRO se activa con ?pro=1 (Stripe success redirect)
+# NexaScope v2.1 - FREE + PRO (Stripe Payment Link redirect)
+# PRO se activa con ?pro=1 (success redirect en Stripe)
 # =========================================================
 
-PRICE_USD = 5.99
+PRICE_EUR = 5.99
 
-# 1) Pega aquí tu Stripe Payment Link (debe redirigir a tu app con ?pro=1)
-# Ejemplo de success URL en Stripe: https://nexascope.streamlit.app/?pro=1
-STRIPE_LINK = "https://buy.stripe.com/test_dRm00bgVp02115AbXafYY00"
+# 👇 PEGA AQUÍ tu Stripe Payment Link REAL cuando lo tengas
+STRIPE_LINK = "https://buy.stripe.com/fZueV5fNU25MboJ9pQ5J601"
 
-# Detectar modo PRO por parámetro en URL
-# En Streamlit nuevo: st.query_params (dict-like)
+# Detectar modo PRO por parámetro en URL (Streamlit Cloud)
 is_pro = st.query_params.get("pro") == "1"
+
 
 # -------------------------
 # Modelo de entrada
@@ -27,12 +24,10 @@ is_pro = st.query_params.get("pro") == "1"
 class NexaInput:
     days_active: int
     activity_level: str
-
     sales_90d: int
     visits_30d: int
     conversations_30d: int
     offers_30d: int
-
     business_type: str
     sale_flow: str
     outbound_level: str
@@ -282,7 +277,6 @@ outbound_level = st.selectbox("¿Cuántas conversaciones inicias tú activamente
 
 st.markdown("---")
 
-# Estado
 if "result" not in st.session_state:
     st.session_state.result = None
 
@@ -308,19 +302,19 @@ if res:
     st.subheader(res["title_pre"])
     st.write(res["hint_pre"])
 
-    # ========== BLOQUEO ==========
+    # ========== BLOQUEO (FREE) ==========
     if not is_pro:
         st.markdown("---")
         st.subheader("🔒 Desbloquea el análisis completo (PRO)")
         st.write("Incluye: plan detallado, errores estratégicos, observación adicional y decisión final clara.")
-        st.markdown(f"**Precio: ${PRICE_USD}**")
+        st.markdown(f"**Precio: €{PRICE_EUR:.2f}**")
 
         if "PEGA_AQUI" in STRIPE_LINK:
             st.warning("Pega tu Stripe Payment Link en STRIPE_LINK.")
         else:
             st.link_button("💳 Pagar y ver análisis completo", STRIPE_LINK, use_container_width=True)
 
-        st.info("Después de pagar, vuelve aquí (Stripe debe redirigirte a esta web con ?pro=1).")
+        st.info("Después de pagar, Stripe debe redirigirte a esta web con ?pro=1.")
 
     # ========== PRO ==========
     if is_pro:
@@ -347,5 +341,4 @@ if res:
 
         st.markdown("#### Decisión recomendada")
         st.write(f"**{full['decision_final']}**")
-
         st.write(full["explicacion_decision"])
