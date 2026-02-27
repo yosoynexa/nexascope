@@ -14,7 +14,7 @@ PRICE_USD = 5.99
 
 # 1) Pega aquí tu Stripe Payment Link (debe redirigir a tu app con ?pro=1)
 # Ejemplo de success URL en Stripe: https://nexascope.streamlit.app/?pro=1
-STRIPE_LINK = "PEGA_AQUI_TU_STRIPE_PAYMENT_LINK"
+STRIPE_LINK = "https://buy.stripe.com/test_dRm00bgVp02115AbXafYY00"
 
 # Detectar modo PRO por parámetro en URL
 # En Streamlit nuevo: st.query_params (dict-like)
@@ -347,4 +347,5 @@ if res:
 
         st.markdown("#### Decisión recomendada")
         st.write(f"**{full['decision_final']}**")
+
         st.write(full["explicacion_decision"])
